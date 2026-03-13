@@ -1,0 +1,227 @@
+here’s a simple one-file portfolio site you can save as index.html:
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>portfolio</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.95);
+      border-bottom: 1px solid #222;
+      padding: 18px 24px;
+    }
+
+    .topbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .name {
+      font-size: 1.4rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.95rem;
+    }
+
+    .info a {
+      color: #fff;
+      text-decoration: none;
+      opacity: 0.85;
+    }
+
+    .info a:hover {
+      opacity: 1;
+    }
+
+    .controls {
+      max-width: 1200px;
+      margin: 20px auto 10px;
+      padding: 0 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .upload-label,
+    .toggle-btn,
+    .clear-btn {
+      background: #111;
+      color: #fff;
+      border: 1px solid #333;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .upload-label:hover,
+    .toggle-btn:hover,
+    .clear-btn:hover {
+      background: #1a1a1a;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .gallery {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .gallery.portrait {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .gallery.landscape {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .photo-card {
+      background: #0a0a0a;
+      border: 1px solid #1c1c1c;
+      overflow: hidden;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .empty {
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 24px;
+      color: #888;
+      text-align: center;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="name">your name</div>
+      <div class="info">
+        <a href="mailto:youremail@example.com">youremail@example.com</a>
+        <a href="https://instagram.com/yourhandle" target="_blank">@yourhandle</a>
+        <a href="https://x.com/yourhandle" target="_blank">@yourhandle</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="controls">
+    <label class="upload-label" for="imageUpload">upload photos</label>
+    <input type="file" id="imageUpload" accept="image/*" multiple>
+
+    <button class="toggle-btn" id="layoutToggle">layout: mixed</button>
+    <button class="clear-btn" id="clearPhotos">clear photos</button>
+  </section>
+
+  <div class="empty" id="emptyMessage">upload your portrait or landscape photos</div>
+  <main class="gallery" id="gallery"></main>
+
+  <script>
+    const uploadInput = document.getElementById("imageUpload");
+    const gallery = document.getElementById("gallery");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const layoutToggle = document.getElementById("layoutToggle");
+    const clearPhotos = document.getElementById("clearPhotos");
+
+    let currentLayout = "mixed";
+
+    function updateEmptyState() {
+      emptyMessage.style.display = gallery.children.length ? "none" : "block";
+    }
+
+    function setLayout(layout) {
+      gallery.classList.remove("portrait", "landscape");
+      currentLayout = layout;
+
+      if (layout === "portrait") gallery.classList.add("portrait");
+      if (layout === "landscape") gallery.classList.add("landscape");
+
+      layoutToggle.textContent = `layout: ${layout}`;
+    }
+
+    layoutToggle.addEventListener("click", () => {
+      if (currentLayout === "mixed") {
+        setLayout("portrait");
+      } else if (currentLayout === "portrait") {
+        setLayout("landscape");
+      } else {
+        setLayout("mixed");
+      }
+    });
+
+    uploadInput.addEventListener("change", (event) => {
+      const files = Array.from(event.target.files);
+
+      files.forEach((file) => {
+        if (!file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const card = document.createElement("div");
+          card.className = "photo-card";
+
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.alt = file.name;
+
+          card.appendChild(img);
+          gallery.appendChild(card);
+          updateEmptyState();
+        };
+
+        reader.readAsDataURL(file);
+      });
+
+      uploadInput.value = "";
+    });
+
+    clearPhotos.addEventListener("click", () => {
+      gallery.innerHTML = "";
+      updateEmptyState();
+    });
+
+    updateEmptyState();
+  </script>
+</body>
+</html>
+i
+replace the name, email, and socials with yours. if you want, i can also make you a cleaner version with a lightbox and better spacing.
